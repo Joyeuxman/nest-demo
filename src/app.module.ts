@@ -1,10 +1,12 @@
 /**
  * 应有程序的根模块
- * 根模块用于处理其他类的引用于共享
- * @Module装饰器类 即为IOC容器
- * imports: 子模块列表
+ * 根模块用于处理其他类的引用、共享
+ * 经过@Module装饰器类 的处理，AppModule类成为IOC容器
+ * 其中 @Module 参数有：
+ * imports: 导入的子模块列表
  * controllers: 使用者列表
  * provides: 提供者列表
+ * exports: 导出的模块列表
  *
  * 重要概念点：
  * IOC：Inversion of Control，控制反转。由IOC容器来负责对象的生命周期和对象间的关系、
@@ -63,9 +65,17 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { GlobalModule } from './global/global.module';
+import { DyanmicM } from './dynamic/dynamic.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [
+    UserModule,
+    AuthModule,
+    GlobalModule,
+    DyanmicM.forRoot({ name: '动态模块' }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

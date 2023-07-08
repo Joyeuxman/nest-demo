@@ -4,10 +4,14 @@
  */
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
+import { AuthService } from './auth/auth.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   getHello(): string {
@@ -17,5 +21,10 @@ export class AppController {
   @Get('getMovieList')
   getMovieList(): Array<any> {
     return this.appService.getMovieList();
+  }
+
+  @Get('auth/list')
+  getAuthList(): string[] {
+    return this.authService.getAuthList();
   }
 }

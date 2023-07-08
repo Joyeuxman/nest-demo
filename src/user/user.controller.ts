@@ -9,19 +9,27 @@ import {
   Version,
   Req,
   Res,
+  Inject,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthService } from 'src/auth/auth.service';
+import { GlobalService } from 'src/global/global.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha';
 
+// @Controller('user')
 @Controller({
   path: 'user',
   version: '2',
 })
-@Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+    private readonly globalService: GlobalService,
+    @Inject('Dynamic') private readonly dynamicInfo: any,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -47,6 +55,33 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  /**
+   * 子模块之间如何互相使用service???
+   * 如：user、auth同为AppModule子模块（其中auth Module已经做了export导出），如何可以让user模块可以使用auth模块的service ???
+   * 方式一：
+   * 在user Module 的 @Module 中使用imports将 Auth Module导入
+   */
+  @Get('auth/list')
+  getUsetAuthList() {
+    return this.authService.getAuthList();
+  }
+
+  /**
+   * 子模块之间如何互相使用service???
+   * 如：user、global同为AppModule子模块（其中global Module已经做了export导出），如何可以让user模块可以使用global模块的service ???
+   * 方式二：
+   * 将global模块使用 @Global 装饰器修饰一下，让其成为全局模块
+   */
+  @Get('global/config')
+  getConfig() {
+    return this.globalService.getConfig();
+  }
+
+  @Get('dynamic/info')
+  getDynamicInfo() {
+    return this.dynamicInfo;
   }
 
   /**
