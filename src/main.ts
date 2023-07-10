@@ -3,7 +3,7 @@
  * 使用NestFatory来创建Nest应用实例
  */
 import { NestFactory } from '@nestjs/core';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { NextFunction, Request, Response } from 'express';
@@ -64,6 +64,9 @@ async function bootstrap() {
 
   // 添加全局响应拦截器
   app.useGlobalInterceptors(new ResponseInterceptor());
+
+  // 添加全局DTO验证管道
+  app.useGlobalPipes(new ValidationPipe());
 
   // 监听3000端口
   await app.listen(3000);
