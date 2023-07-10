@@ -10,7 +10,8 @@ import { NextFunction, Request, Response } from 'express';
 import * as cors from 'cors';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { ResponseInterceptor } from './common/response';
+import { ResponseInterceptor } from './common/responseInterceptor';
+import { HttpExceptionFilter } from './common/httpExceptionFilter';
 
 const blackList = ['/auth/info'];
 /**
@@ -58,6 +59,10 @@ async function bootstrap() {
     prefix: '/static/', //虚拟前缀
   });
 
+  // 添加异常拦截器
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // 添加全局响应拦截器
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // 监听3000端口
