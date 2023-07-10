@@ -68,6 +68,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { GlobalModule } from './global/global.module';
 import { DyanmicM } from './dynamic/dynamic.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { DyanmicM } from './dynamic/dynamic.module';
     AuthModule,
     GlobalModule,
     DyanmicM.forRoot({ name: '动态模块' }),
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

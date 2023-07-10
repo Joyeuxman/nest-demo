@@ -8,6 +8,8 @@ import { AppModule } from './app.module';
 import * as session from 'express-session';
 import { NextFunction, Request, Response } from 'express';
 import * as cors from 'cors';
+import { join, resolve } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 const blackList = ['/auth/info'];
 /**
@@ -28,7 +30,7 @@ const globalMiddle = (req: Request, res: Response, next: NextFunction) => {
 };
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // 可以跨域访问 cors是一个解除跨域限制的中间件
   app.use(cors());
 
@@ -47,6 +49,13 @@ async function bootstrap() {
       cookie: { maxAge: null }, //设置返回前端浏览器cookie的配置，配置默认值：{ path: '/', httpOnly: true, secure: false, maxAge: null }
     }),
   );
+
+  // 使用 useStaticAssets 来创建静态资源目录，以便访问上传之后的图片
+  // useStaticAssets(path,options) path是存放静态资源的路径
+  // 静态资源路径： http://localhost:3000/static/xxx
+  app.useStaticAssets(join(__dirname, '../public'), {
+    prefix: '/static/', //虚拟前缀
+  });
 
   // 监听3000端口
   await app.listen(3000);
