@@ -10,6 +10,8 @@ import {
   Req,
   Res,
   Inject,
+  ParseIntPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthService } from 'src/auth/auth.service';
@@ -17,6 +19,10 @@ import { GlobalService } from 'src/global/global.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as svgCaptcha from 'svg-captcha';
+import * as uuid from 'uuid';
+
+// 使用随机算法生成一个唯一ID
+console.log('uuid.v4', uuid.v4());
 
 // @Controller('user')
 @Controller({
@@ -41,9 +47,28 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  /**
+   * 根据ID获取用户
+   * @param id
+   * @returns
+   * 管道函数的作用
+   * 1. 转换，可以将前端传入的数据转成我们需要的数据
+   * 2. 验证，类似于前端rules配置的验证规则
+   * nestjs提供的8个内置转换API
+   * ValidationPipe
+   * ParseIntPipe
+   * ParseFloatPipe
+   * ParseBoolPipe
+   * ParseArrayPipe
+   * ParseUUIDPipe
+   * ParseEnumPipe
+   * DefaultValuePipe
+   */
+
   @Get(':id')
   @Version('1')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    console.log(typeof id, '+++++++++++++++++');
     return this.userService.findOne(+id);
   }
 

@@ -21,12 +21,12 @@ export class UserModule implements NestModule {
     // consumer.apply(Logger).forRoutes('v2/user');
 
     // 也可以指定拦截的方法
-    // consumer.apply(Logger).forRoutes({
-    //   path: 'v2/user',
-    //   method: RequestMethod.POST,
-    // });
+    consumer.apply(Logger).forRoutes({
+      path: 'v2/user',
+      method: RequestMethod.POST,
+    });
 
     // 也可以将整个UserController放进去，表明拦截UserController中的所有路由
-    consumer.apply(Logger).forRoutes(UserController);
+    // consumer.apply(Logger).forRoutes(UserController);
   }
 }
