@@ -10,6 +10,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as cors from 'cors';
 import { join, resolve } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ResponseInterceptor } from './common/response';
 
 const blackList = ['/auth/info'];
 /**
@@ -56,6 +57,8 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '../public'), {
     prefix: '/static/', //虚拟前缀
   });
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   // 监听3000端口
   await app.listen(3000);
